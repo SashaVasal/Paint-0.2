@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
 namespace Graph
 {
-    
-   
-    
+
+
+
     public partial class Form1 : Form
     {
         Tool tool = new Tool();
         Figure draw = new Figure();
-        
+        //List<draw> draws;
+        Graphics g;
+        List<Figure> draws = new List<Figure>();
+        List<Figure> remove_draws = new List<Figure>();
         public Form1()
         {
-            tool.bit = new Bitmap(1000,1000);
+            //draws.Add(draw);
+            //draws.Add(draw);
+            draw.bit = new Bitmap(1000, 1000);
             InitializeComponent();
         }
-        
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -32,117 +32,149 @@ namespace Graph
         // Event
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            
-            if(tool.IsMouseDown == true)
+
+            if (draw.IsMouseDown == true)
             {
-                tool.MovePoint = e.Location;
+                draw.MovePoint = e.Location;
+
                 Refresh();
-                if(tool.count == 1)
+                if (draw.count == 1)
                 {
                     if (e.Button == MouseButtons.Left)
-                    {
-                        Graphics g = Graphics.FromImage(tool.bit);
-                        tool.Draw(g);
-                        canvas.Image = tool.bit;
-                        tool.newPoint = tool.MovePoint;
+                    {                                                             
+                        draws.Add(new Figure() { count = draw.count, newPoint = draw.newPoint, StartPoint = draw.StartPoint, MovePoint = draw.MovePoint, pen = draw.pen });
+                        draw.newPoint = draw.MovePoint;
+                       
                     }
                 }
-                
 
-            }    
-            
+
+            }
+
         }
 
 
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
         {
+            remove_draws.Clear();
             if (e.Button == MouseButtons.Left)
             {
-                
-                tool.IsMouseDown = true;
-                tool.StartPoint = e.Location;
 
-                if (tool.count != 5 || tool.ActiveBrake == false)
+                draw.IsMouseDown = true;
+                draw.StartPoint = e.Location;
+
+                if (draw.count != 5 || draw.ActiveBrake == false)
                 {
-                    tool.newPoint = e.Location;
-                    tool.ActiveBrake = true;
+
+                    draw.newPoint = e.Location;
+
+                    draw.ActiveBrake = true;
                 }
-                
+
             }
-            
-              
+
+
         }
-        
-        
+
+
 
         private void Canvas_MouseUp(object sender, MouseEventArgs e)
         {
-            if(tool.IsMouseDown == true)
+         
+            if (draw.IsMouseDown == true)
             {
-                tool.MovePoint = e.Location;        
-                tool.IsMouseDown = false;  
+
+                draw.MovePoint = e.Location;
+                draw.IsMouseDown = false;
+
+                draws.Add(new Figure() { count = draw.count, newPoint = draw.newPoint, StartPoint = draw.StartPoint, MovePoint = draw.MovePoint, pen = draw.pen , });
+
                 
-                Graphics g = Graphics.FromImage(tool.bit);               
-                tool.Draw(g);          
-                if(tool.count == 5)
+
+                         
+                if (draw.count == 5)
                 {
-                    tool.newPoint = tool.MovePoint;
+                    draw.newPoint = draw.MovePoint;
                 }
-                canvas.Image =tool.bit;
+                canvas.Image =draw.bit;
             }
         }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
-        {
-            
-            tool.Draw(e);    
-            
+        {    
+               foreach (Figure d in draws)
+               {
+                    d.Draw(e);
+               }
+               draw.Draw(e);
         }
 
 
         // Buttons
         public void PenClick(object sender, EventArgs e)
         {
-            tool.count = 1;
-            tool.ActiveBrake = false;
+            draw.count = 1;
+            draw.ActiveBrake = false;
         }
         private void SquareClick(object sender, EventArgs e)
         {
-            tool.count = 2;
-            tool.ActiveBrake = false;
+            draw.count = 2;
+            draw.ActiveBrake = false;
         }
         private void EllipseClick(object sender, EventArgs e)
         {
-            tool.count = 3;
-            tool.ActiveBrake = false;
+            draw.count = 3;
+            draw.ActiveBrake = false;
         }
         private void LineClick(object sender, EventArgs e)
         {
-            tool.count = 4;
-            tool.ActiveBrake = false;
+            draw.count = 4;
+            draw.ActiveBrake = false;
         }
         public void BrokenClick(object sender, EventArgs e)
         {
-            tool.count = 5;
-            tool.ActiveBrake = false;
+            draw.count = 5;
+            draw.ActiveBrake = false;
         }
+        public void Delete_LastClick(object sender, EventArgs e)
+        {
+            Refresh();
+            if (draws.Count > 0)
+            {
+                remove_draws.Add(draws[draws.Count - 1]);
+                draws.RemoveAt(draws.Count - 1);
+                
+            }
+            Refresh();
 
+        }
+        public void Restore_LastClick(object sender, EventArgs e)
+        {
+            Refresh();
+            if (remove_draws.Count > 0)
+            {
+                draws.Add(remove_draws[remove_draws.Count - 1]);
+                remove_draws.RemoveAt(remove_draws.Count - 1);
 
+            }
+            Refresh();
+        }
+        
 
         private void ChangeColor_Click(object sender, EventArgs e)
         {
 
             if (colorDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
-            tool._color = colorDialog1.Color;
-            tool.pen = new Pen(tool._color, tool.width_pen);
+            draw._color = colorDialog1.Color;
+            draw.pen = new Pen(draw._color, draw.width_pen);
 
         }
         private void Width_Bar_Click(object sender, EventArgs e)
         {
-            tool.width_pen = Width_Bar.Value;
+            draw.width_pen = Width_Bar.Value;
             Number.Text = Convert.ToString(Width_Bar.Value);
-            tool.pen = new Pen(tool._color, tool.width_pen);
+            draw.pen = new Pen(draw._color, draw.width_pen);
         }
     }
 }
