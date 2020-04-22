@@ -8,148 +8,68 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace Graph
 {
-
-   
-    public class Figure : Tool 
+    public interface IDrawable
     {
-        public Point newPoint = new Point(0,0);
-        public bool ActiveBrake = false;
-
-       
-        //Square
-        public void DrawSquare(PaintEventArgs e, Pen pen, Point StartPoint, Point MovePoint)
+        void Draw(PaintEventArgs e, Tool tool);
+        string GetName();
+    }
+    public class ViewSize
+    {
+        public int Height;
+        public int Width;
+        public ViewSize(int Height, int Width)
         {
-            //e.Graphics.DrawRectangle(pen, StartPoint.X, StartPoint.Y, StartPoint.X - MovePoint.X, StartPoint.Y - MovePoint.Y);
-            if(MovePoint.X > StartPoint.X && MovePoint.Y > StartPoint.Y)
-            {
-                e.Graphics.DrawRectangle(pen, StartPoint.X, StartPoint.Y, MovePoint.X - StartPoint.X, MovePoint.Y - StartPoint.Y);
-            }
-            else if (MovePoint.X < StartPoint.X && MovePoint.Y < StartPoint.Y)
-            {
-                e.Graphics.DrawRectangle(pen, MovePoint.X, MovePoint.Y,  StartPoint.X - MovePoint.X , StartPoint.Y - MovePoint.Y);
-            }
-            if (MovePoint.X > StartPoint.X && MovePoint.Y < StartPoint.Y)
-            {
-                e.Graphics.DrawRectangle(pen, StartPoint.X, MovePoint.Y,  MovePoint.X - StartPoint.X, StartPoint.Y - MovePoint.Y);
-            }
-            else if (MovePoint.X < StartPoint.X && MovePoint.Y > StartPoint.Y)
-            {
-                e.Graphics.DrawRectangle(pen, MovePoint.X, StartPoint.Y, StartPoint.X - MovePoint.X, MovePoint.Y - StartPoint.Y);
-            }
-        }
-        public void DrawSquare(Graphics g, Pen pen, Point StartPoint, Point MovePoint)
-        {
-            if (MovePoint.X > StartPoint.X && MovePoint.Y > StartPoint.Y)
-            {
-                g.DrawRectangle(pen, StartPoint.X, StartPoint.Y, MovePoint.X - StartPoint.X, MovePoint.Y - StartPoint.Y);
-            }
-            else if (MovePoint.X < StartPoint.X && MovePoint.Y < StartPoint.Y)
-            {
-                g.DrawRectangle(pen, MovePoint.X, MovePoint.Y, StartPoint.X - MovePoint.X, StartPoint.Y - MovePoint.Y);
-            }
-            if (MovePoint.X > StartPoint.X && MovePoint.Y < StartPoint.Y)
-            {
-                g.DrawRectangle(pen, StartPoint.X, MovePoint.Y, MovePoint.X - StartPoint.X, StartPoint.Y - MovePoint.Y);
-            }
-            else if (MovePoint.X < StartPoint.X && MovePoint.Y > StartPoint.Y)
-            {
-               g.DrawRectangle(pen, MovePoint.X, StartPoint.Y, StartPoint.X - MovePoint.X, MovePoint.Y - StartPoint.Y);
-            }
-        }
-        //Line
-        public void DrawLine(PaintEventArgs e, Pen pen, Point StartPoint, Point MovePoint)
-        {
-            e.Graphics.DrawLine(pen, StartPoint.X, StartPoint.Y, MovePoint.X, MovePoint.Y);
-        }
-        public void DrawLine(Graphics g, Pen pen, Point StartPoint, Point MovePoint)
-        {
-            g.DrawLine(pen, StartPoint.X, StartPoint.Y, MovePoint.X, MovePoint.Y);
-        }
-        //Pen 
-        public void Pen(PaintEventArgs e, Pen pen, Point MovePoint)
-        {
-            e.Graphics.DrawLine(pen, MovePoint.X, MovePoint.Y, newPoint.X, newPoint.Y);
-            e.Graphics.DrawLine(pen, MovePoint.X, MovePoint.Y, newPoint.X, newPoint.Y + 1);
-            e.Graphics.DrawLine(pen, MovePoint.X, MovePoint.Y, newPoint.X + 1, newPoint.Y);
-            e.Graphics.DrawLine(pen, MovePoint.X, MovePoint.Y, newPoint.X, newPoint.Y);
-        }
-        //Ellipse
-        public void DrawEllipse(PaintEventArgs e, Pen pen, Point StartPoint, Point MovePoint)
-        {
-            e.Graphics.DrawEllipse(pen, StartPoint.X, StartPoint.Y, MovePoint.X - StartPoint.X, MovePoint.Y - StartPoint.Y);
-        }
-        public void DrawEllipse(Graphics g, Pen pen, Point StartPoint, Point MovePoint)
-        {
-            g.DrawEllipse(pen, StartPoint.X, StartPoint.Y, MovePoint.X - StartPoint.X, MovePoint.Y - StartPoint.Y);
-        }
-        //Polyline
-        public void DrawPolyline(PaintEventArgs e, Pen pen, Point MovePoint)
-        {
-            e.Graphics.DrawLine(pen, newPoint.X, newPoint.Y, MovePoint.X, MovePoint.Y);
-        }
-        public void DrawPolyline(Graphics g, Pen pen, Point MovePoint)
-        {
-            g.DrawLine(pen, newPoint.X, newPoint.Y, MovePoint.X, MovePoint.Y);
-        }
-        //Drawing
-        public void Draw(PaintEventArgs e)
-        {
-            switch (count)
-            {
-                case 1:
-                    Pen(e, pen, MovePoint);
-                    break;
-                case 2:
-                    DrawSquare(e, pen, StartPoint, MovePoint);
-                    break;
-                case 3:
-                    DrawEllipse(e, pen, StartPoint, MovePoint);
-                    break;
-                case 4:
-                    DrawLine(e, pen, StartPoint, MovePoint);
-                    break;
-                case 5:
-                    DrawPolyline(e, pen, MovePoint);
-                    break;
-            }
-        }
-        public void Draw(Graphics g)
-        {
-            switch (count)
-            {
-                
-                case 2:
-                    DrawSquare(g, pen, StartPoint, MovePoint);
-                    break;
-                case 3:
-                    DrawEllipse(g, pen, StartPoint, MovePoint);
-                    break;
-                case 4:
-                    DrawLine(g, pen, StartPoint, MovePoint);
-                    break;
-                case 5:
-                    DrawPolyline(g, pen, MovePoint);
-                    break;
-            }
+            this.Width = Width;
+            this.Height = Height;
         }
     }
     public class Tool
     {
 
-        public int count = 1;
-        public int width_pen = 5;    
-        public Color _color = Color.Black;
+        public ViewSize viewSize;
+        public PictureBox pictureBox;
+        public Tool(int Height, int Width)
+        {
+            viewSize = new ViewSize(Height, Width);
+        }
+        public Bitmap bit;
+        public IDrawable drawable = new Draw_Ellipse();
+        public PaintEventArgs e;
+        public List<Tool> h = new List<Tool>();
+        public void AddH(Tool tool)
+        {
+            Tool q = new Tool(viewSize.Height,viewSize.Width)
+            {
+                drawable = tool.drawable,
+                MovePoint = tool.MovePoint,
+                StartPoint = tool.StartPoint,
+                width = tool.width,
+                color = tool.color,
+                e = tool.e,
+                OldMovePoint = tool.OldMovePoint
+            };
+            h.Add(q);
+        }       
+        public float width = 5;
+        public Color color = Color.Black;
+        public int WasClick = 1;
         public bool IsMouseDown = false;
-
         public Point StartPoint = new Point();
         public Point MovePoint = new Point();
+        public Point OldMovePoint = new Point();
+        public Point ZoomPoint = new Point();
        
-
-        public Pen pen = new Pen(Color.Black, 5);
-
-        public Bitmap bit;
         
+       
     }
+    
+
+    
+
+
+    
+
 }

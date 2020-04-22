@@ -6,25 +6,30 @@ using System.Windows.Forms;
 
 namespace Graph
 {
+    enum States
+    {
+        MouseUp = 0,
+        MouseDown = 1      
+    }
 
-
-
+    
     public partial class Form1 : Form
     {
-        Tool tool = new Tool();
-        Figure draw = new Figure();
-        //List<draw> draws;
-        Graphics g;
-        List<Figure> draws = new List<Figure>();
-        List<Figure> remove_draws = new List<Figure>();
+        readonly Tool tool;     
+        readonly ToolPicker picker = new ToolPicker();
+        PaintEventArgs e; 
+
         public Form1()
         {
-            //draws.Add(draw);
-            //draws.Add(draw);
-            draw.bit = new Bitmap(1000, 1000);
+            
             InitializeComponent();
+            tool = new Tool(canvas.Height, canvas.Width)
+            {
+                bit = new Bitmap(3000, 3000),
+                drawable = new Draw_Ellipse()
+            };
         }
-
+ 
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -33,148 +38,107 @@ namespace Graph
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
 
-            if (draw.IsMouseDown == true)
+            if (tool.IsMouseDown == true)
             {
-                draw.MovePoint = e.Location;
-
+                if(tool.drawable.GetName() == "Pen")
+                {
+                    tool.AddH(tool);
+                    tool.OldMovePoint = tool.MovePoint;
+                }
+                
+                tool.MovePoint = e.Location;              
                 Refresh();
-                if (draw.count == 1)
-                {
-                    if (e.Button == MouseButtons.Left)
-                    {                                                             
-                        draws.Add(new Figure() { count = draw.count, newPoint = draw.newPoint, StartPoint = draw.StartPoint, MovePoint = draw.MovePoint, pen = draw.pen });
-                        draw.newPoint = draw.MovePoint;
-                       
-                    }
-                }
-
-
-            }
-
-        }
-
-
-        private void Canvas_MouseDown(object sender, MouseEventArgs e)
-        {
-            remove_draws.Clear();
-            if (e.Button == MouseButtons.Left)
-            {
-
-                draw.IsMouseDown = true;
-                draw.StartPoint = e.Location;
-
-                if (draw.count != 5 || draw.ActiveBrake == false)
-                {
-
-                    draw.newPoint = e.Location;
-
-                    draw.ActiveBrake = true;
-                }
-
-            }
-
-
-        }
-
-
-
-        private void Canvas_MouseUp(object sender, MouseEventArgs e)
-        {
-         
-            if (draw.IsMouseDown == true)
-            {
-
-                draw.MovePoint = e.Location;
-                draw.IsMouseDown = false;
-
-                draws.Add(new Figure() { count = draw.count, newPoint = draw.newPoint, StartPoint = draw.StartPoint, MovePoint = draw.MovePoint, pen = draw.pen , });
 
                 
+            }
+        }
 
-                         
-                if (draw.count == 5)
-                {
-                    draw.newPoint = draw.MovePoint;
-                }
-                canvas.Image =draw.bit;
+        private void Canvas_MouseDown(object sender, MouseEventArgs e)
+        {           
+            if (e.Button == MouseButtons.Left)
+            {              
+                tool.StartPoint = e.Location;
+                tool.MovePoint = e.Location;
+                tool.OldMovePoint = tool.MovePoint;
+                tool.IsMouseDown = true;
+                if (tool.drawable.GetName() == "Zoom") tool.drawable.Draw(this.e, tool);
+
+
+            }
+        }
+        private void Canvas_MouseUp(object sender, MouseEventArgs e)
+        {
+            
+            if (tool.IsMouseDown == true)
+            {
+                tool.OldMovePoint = tool.MovePoint;
+                tool.MovePoint = e.Location;
+
+                if (tool.drawable.GetName() != "Zoom") tool.AddH(tool);
+                tool.IsMouseDown = false;             
+                canvas.Image = tool.bit;                   
             }
         }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
-        {    
-               foreach (Figure d in draws)
-               {
-                    d.Draw(e);
-               }
-               draw.Draw(e);
+        {
+
+            if (tool.drawable.GetName() != "Zoom") tool.drawable.Draw(e, tool);
+            
+            foreach (Tool f in tool.h)
+            {            
+                 f.drawable.Draw(e, f);
+            }
+            this.e = e;
         }
 
-
-        // Buttons
+        // Button
         public void PenClick(object sender, EventArgs e)
         {
-            draw.count = 1;
-            draw.ActiveBrake = false;
+            picker.PickPen(ref tool.drawable);
         }
         private void SquareClick(object sender, EventArgs e)
         {
-            draw.count = 2;
-            draw.ActiveBrake = false;
+            picker.PickSquare(ref tool.drawable);
         }
         private void EllipseClick(object sender, EventArgs e)
         {
-            draw.count = 3;
-            draw.ActiveBrake = false;
+            picker.PickEllipse(ref tool.drawable);
         }
         private void LineClick(object sender, EventArgs e)
         {
-            draw.count = 4;
-            draw.ActiveBrake = false;
+            picker.PickLine(ref tool.drawable);
         }
         public void BrokenClick(object sender, EventArgs e)
         {
-            draw.count = 5;
-            draw.ActiveBrake = false;
+            //picker.PickPolyline(tool.drawable);
         }
-        public void Delete_LastClick(object sender, EventArgs e)
-        {
-            Refresh();
-            if (draws.Count > 0)
-            {
-                remove_draws.Add(draws[draws.Count - 1]);
-                draws.RemoveAt(draws.Count - 1);
-                
-            }
-            Refresh();
-
-        }
-        public void Restore_LastClick(object sender, EventArgs e)
-        {
-            Refresh();
-            if (remove_draws.Count > 0)
-            {
-                draws.Add(remove_draws[remove_draws.Count - 1]);
-                remove_draws.RemoveAt(remove_draws.Count - 1);
-
-            }
-            Refresh();
-        }
+        
         
 
         private void ChangeColor_Click(object sender, EventArgs e)
         {
-
-            if (colorDialog1.ShowDialog() == DialogResult.Cancel)
+           
+            if (ColorDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
-            draw._color = colorDialog1.Color;
-            draw.pen = new Pen(draw._color, draw.width_pen);
-
+            tool.color = ColorDialog1.Color;
+            
         }
         private void Width_Bar_Click(object sender, EventArgs e)
         {
-            draw.width_pen = Width_Bar.Value;
-            Number.Text = Convert.ToString(Width_Bar.Value);
-            draw.pen = new Pen(draw._color, draw.width_pen);
+            tool.width = Width_Bar.Value;         
+            Number.Text = Convert.ToString(Width_Bar.Value);         
+            
+        }
+
+        private void Zoom_Click(object sender, EventArgs e)
+        {
+            picker.PickZoom(ref tool.drawable);
+        }
+        private void Hand_Click(object sender, EventArgs e)
+        {
+            picker.PickHand(ref tool.drawable);
         }
     }
 }
+
