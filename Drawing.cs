@@ -13,46 +13,28 @@ namespace Graph
 {
     public interface IDrawable
     {
-        void Draw(PaintEventArgs e, Tool tool);
+        void Draw(PaintEventArgs e, Parametr tool, History history);
         string GetName();
-    }
+        void ClickDownLeft(PaintEventArgs e, Parametr tool, History history);
+        void ClickDownRight(PaintEventArgs e, Parametr tool, History history);
+        void ClickUp(PaintEventArgs e, Parametr tool, History history);
+        void ClickMove(PaintEventArgs e, Parametr tool, History history);
+
+    }  
     public class ViewSize
     {
         public int Height;
-        public int Width;
-        public ViewSize(int Height, int Width)
-        {
-            this.Width = Width;
-            this.Height = Height;
-        }
+        public int Width;       
     }
-    public class Tool
+    public class Parametr
     {
 
-        public ViewSize viewSize;
-        public PictureBox pictureBox;
-        public Tool(int Height, int Width)
-        {
-            viewSize = new ViewSize(Height, Width);
-        }
+        public ViewSize viewSize = new ViewSize();
+        public PictureBox pictureBox;  
         public Bitmap bit;
         public IDrawable drawable = new Draw_Ellipse();
-        public PaintEventArgs e;
-        public List<Tool> h = new List<Tool>();
-        public void AddH(Tool tool)
-        {
-            Tool q = new Tool(viewSize.Height,viewSize.Width)
-            {
-                drawable = tool.drawable,
-                MovePoint = tool.MovePoint,
-                StartPoint = tool.StartPoint,
-                width = tool.width,
-                color = tool.color,
-                e = tool.e,
-                OldMovePoint = tool.OldMovePoint
-            };
-            h.Add(q);
-        }       
+        public int Choose = 0;
+        public PaintEventArgs e;      
         public float width = 5;
         public Color color = Color.Black;
         public int WasClick = 1;
@@ -61,9 +43,7 @@ namespace Graph
         public Point MovePoint = new Point();
         public Point OldMovePoint = new Point();
         public Point ZoomPoint = new Point();
-       
-        
-       
+    
     }
     
 

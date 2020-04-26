@@ -7,18 +7,31 @@ namespace Graph
 {
     public class Draw_Pen : IDrawable
     {
+        
         public string GetName()
         {
             return "Pen";
         }
-        public void Draw(PaintEventArgs e, Tool tool)
+        public void Draw(PaintEventArgs e, Parametr tool, History history)
         {
-            if(tool.OldMovePoint.X > 0 && tool.OldMovePoint.Y > 0 && tool.MovePoint.Y > 0 && tool.MovePoint.Y > 0)
-            {
-                e.Graphics.DrawLine(new Pen(tool.color, tool.width), tool.OldMovePoint.X, tool.OldMovePoint.Y, tool.MovePoint.X, tool.MovePoint.Y);
-            }
-                       
+            e.Graphics.DrawLine(new Pen(tool.color, tool.width), tool.OldMovePoint.X, tool.OldMovePoint.Y, tool.MovePoint.X, tool.MovePoint.Y);
         }
+        public void ClickDownRight(PaintEventArgs e, Parametr tool, History history)
+        {
 
+        }
+        public void ClickDownLeft(PaintEventArgs e, Parametr tool, History history)
+        {
+
+        }
+        public void ClickUp(PaintEventArgs e, Parametr tool, History history)
+        {
+
+        }
+        public void ClickMove(PaintEventArgs e, Parametr tool, History history)
+        {
+            history.AddElement(tool);
+            tool.OldMovePoint = tool.MovePoint;                   
+        }
     }
 }

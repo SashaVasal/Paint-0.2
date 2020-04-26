@@ -43,7 +43,7 @@ namespace Graph
         public void PickZoom(ref IDrawable figures)
         {
 
-            figures = new Zoom();
+            figures = new ZoomTool();
         }
         public void PickHand(ref IDrawable figures)
         {

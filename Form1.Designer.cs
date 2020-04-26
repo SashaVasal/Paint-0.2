@@ -1,6 +1,6 @@
 ﻿namespace Graph
 {
-    partial class Form1
+    partial class WindowsForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -30,6 +30,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.Number = new System.Windows.Forms.Label();
             this.Width_Bar = new System.Windows.Forms.TrackBar();
@@ -43,7 +44,6 @@
             this.listView1 = new System.Windows.Forms.ListView();
             this.canvas = new System.Windows.Forms.PictureBox();
             this.ColorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.button4 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Width_Bar)).BeginInit();
             this.panel2.SuspendLayout();
@@ -65,6 +65,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(258, 216);
             this.panel1.TabIndex = 1;
+            // 
+            // button4
+            // 
+            this.button4.AutoSize = true;
+            this.button4.Location = new System.Drawing.Point(130, 119);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 6;
+            this.button4.Text = "Hand";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.Hand_Click);
             // 
             // button3
             // 
@@ -201,18 +212,7 @@
             this.ColorDialog1.SolidColorOnly = true;
             this.ColorDialog1.HelpRequest += new System.EventHandler(this.Form1_Load);
             // 
-            // button4
-            // 
-            this.button4.AutoSize = true;
-            this.button4.Location = new System.Drawing.Point(130, 119);
-            this.button4.Name = "Hand";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "Hand";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.Hand_Click);
-            // 
-            // Form1
+            // WindowsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -221,8 +221,8 @@
             this.Controls.Add(this.canvas);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "WindowsForm";
+            this.Text = "WindowsForm";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
