@@ -84,7 +84,7 @@ namespace Graph
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
-
+            
             tool.drawable.Draw(e, tool, history);                    
             foreach (Parametr f in history.history)
             {
