@@ -20,8 +20,13 @@ namespace Graph
                 width = tool.width,
                 color = tool.color,
                 e = tool.e,
-                OldMovePoint = tool.OldMovePoint
-            };
+                OldMovePoint = tool.OldMovePoint,
+                startAngle = tool.startAngle,
+                sweepAngle = tool.sweepAngle,
+                hatchBrush = tool.hatchBrush,
+                dashPattern = tool.dashPattern,
+                brush = tool.brush
+    };
             history.Add(q);
         }
     }

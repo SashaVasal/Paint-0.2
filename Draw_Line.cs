@@ -17,8 +17,15 @@ namespace Graph
         }
         public void Draw(PaintEventArgs e, Parametr tool, History history)
         {
-            
-            e.Graphics.DrawLine(new Pen(tool.color, tool.width), tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X, tool.MovePoint.Y);
+            Pen pen = new Pen(tool.color, tool.width);
+            if (tool.dashPattern == true)
+            {
+                pen.DashCap = System.Drawing.Drawing2D.DashCap.Round;
+                pen.DashPattern = new float[] { 4.0F, 2.0F, 1.0F, 3.0F };
+            }
+
+
+            e.Graphics.DrawLine(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X, tool.MovePoint.Y);
             
         }
         public void ClickDownRight(PaintEventArgs e, Parametr tool, History history)

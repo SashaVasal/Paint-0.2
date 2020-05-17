@@ -6,6 +6,7 @@ namespace Graph
 {
     class ZoomTool:IDrawable
     {
+        bool click = false;
         public string GetName()
         {
             return "Zoom";
@@ -37,10 +38,10 @@ namespace Graph
                 tool.ZoomPoint.X = Convert.ToInt32(Convert.ToSingle(tool.ZoomPoint.X / 1)) + (tool.StartPoint.X - tool.MovePoint.X) / 2;
                 tool.ZoomPoint.Y = Convert.ToInt32(Convert.ToSingle(tool.ZoomPoint.Y / 1)) + (tool.MovePoint.Y - tool.StartPoint.Y) / 2;
             }
-
-            
-            
-            
+            if (click == false)
+            {
+                e.Graphics.Clear(Color.White);
+            }
         }
         
         public void ClickUp(PaintEventArgs e, Parametr tool, History history)
@@ -60,8 +61,7 @@ namespace Graph
                 f.width *= loupe;
             }
 
-
-
+            click = false;
 
         }
         public void ClickDownRight(PaintEventArgs e, Parametr tool, History history)
@@ -82,15 +82,15 @@ namespace Graph
                     f.OldMovePoint.Y = Convert.ToInt32((Convert.ToSingle(f.OldMovePoint.Y) + tool.ZoomPoint.Y) / loupe);
                     f.width /= loupe;
                 }
-            
+            click = true;
         }
         public void ClickDownLeft(PaintEventArgs e, Parametr tool, History history)
         {
-
+            click = true;
         }
         public void ClickMove(PaintEventArgs e, Parametr tool, History history)
         {
-
+            
         }
     }
 }

@@ -19,6 +19,8 @@ namespace Graph
         {
            
             figures = new Draw_Pen();
+            
+            
         }
         public void PickSquare(ref IDrawable figures)
         {
@@ -49,6 +51,11 @@ namespace Graph
         {
 
             figures = new Hand();
+        }
+        public void PickPie(ref IDrawable figures)
+        {
+
+            figures = new Draw_Pie();
         }
     }
 

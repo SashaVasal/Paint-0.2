@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Graph
 {
-    class Draw_Square: IDrawable
+    public class Draw_Pie : IDrawable
     {
         public string GetName()
         {
@@ -26,22 +26,21 @@ namespace Graph
                     //hatchStyles.Add(HatchStyle.)
                     if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
                     {
-                        e.Graphics.FillRectangle(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
-
+                        e.Graphics.FillPie(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
                     }
                     else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
                     {
-                        e.Graphics.FillRectangle(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
-
+                        e.Graphics.FillPie(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
                     }
                     if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
                     {
-                        e.Graphics.FillRectangle(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
+                        e.Graphics.FillPie(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
                     }
                     else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
                     {
-                        e.Graphics.FillRectangle(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
+                        e.Graphics.FillPie(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
                     }
+
                 }
                 else
                 {
@@ -49,52 +48,50 @@ namespace Graph
 
                     if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
                     {
-                        e.Graphics.FillRectangle(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
-
+                        e.Graphics.FillPie(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
                     }
                     else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
                     {
-                        e.Graphics.FillRectangle(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
-
+                        e.Graphics.FillPie(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
                     }
                     if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
                     {
-                        e.Graphics.FillRectangle(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
+                        e.Graphics.FillPie(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
                     }
                     else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
                     {
-                        e.Graphics.FillRectangle(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
+                        e.Graphics.FillPie(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
                     }
                 }
-                
             }
             else
-            {         
+            {
                 Pen pen = new Pen(tool.color, tool.width);
                 if (tool.dashPattern == true)
                 {
                     pen.DashCap = System.Drawing.Drawing2D.DashCap.Round;
                     pen.DashPattern = new float[] { 4.0F, 2.0F, 1.0F, 3.0F };
                 }
+
                 if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
                 {
-                    e.Graphics.DrawRectangle(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
+                    e.Graphics.DrawPie(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
                 }
                 else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
                 {
-                    e.Graphics.DrawRectangle(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
+                    e.Graphics.DrawPie(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
                 }
                 if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
                 {
-                    e.Graphics.DrawRectangle(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
+                    e.Graphics.DrawPie(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
                 }
                 else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
                 {
-                    e.Graphics.DrawRectangle(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
+                    e.Graphics.DrawPie(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
                 }
             }
-           
-           
+            
+            
         }
         public void ClickDownRight(PaintEventArgs e, Parametr tool, History history)
         {
@@ -106,12 +103,12 @@ namespace Graph
         }
         public void ClickUp(PaintEventArgs e, Parametr tool, History history)
         {
+           
             history.AddElement(tool);
         }
         public void ClickMove(PaintEventArgs e, Parametr tool, History history)
         {
-
+            
         }
-
     }
 }

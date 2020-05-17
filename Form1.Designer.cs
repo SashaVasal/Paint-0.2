@@ -29,36 +29,37 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WindowsForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.Number = new System.Windows.Forms.Label();
-            this.Width_Bar = new System.Windows.Forms.TrackBar();
+            this.button5 = new System.Windows.Forms.Button();
             this.Line = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.BrokenLine = new System.Windows.Forms.Button();
             this.Pen = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.ChangeColor = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.canvas = new System.Windows.Forms.PictureBox();
             this.ColorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.DropDownMenu = new System.Windows.Forms.Button();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button6 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Width_Bar)).BeginInit();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.button3);
-            this.panel1.Controls.Add(this.Number);
-            this.panel1.Controls.Add(this.Width_Bar);
+            this.panel1.Controls.Add(this.button5);
             this.panel1.Controls.Add(this.Line);
             this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.BrokenLine);
             this.panel1.Controls.Add(this.Pen);
             this.panel1.Location = new System.Drawing.Point(15, 34);
@@ -88,25 +89,16 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.Zoom_Click);
             // 
-            // Number
+            // button5
             // 
-            this.Number.AutoSize = true;
-            this.Number.Location = new System.Drawing.Point(151, 46);
-            this.Number.Name = "Number";
-            this.Number.Size = new System.Drawing.Size(13, 13);
-            this.Number.TabIndex = 5;
-            this.Number.Text = "5";
-            // 
-            // Width_Bar
-            // 
-            this.Width_Bar.Location = new System.Drawing.Point(115, 3);
-            this.Width_Bar.Minimum = 1;
-            this.Width_Bar.Name = "Width_Bar";
-            this.Width_Bar.Size = new System.Drawing.Size(104, 45);
-            this.Width_Bar.TabIndex = 5;
-            this.Width_Bar.TickFrequency = 2;
-            this.Width_Bar.Value = 5;
-            this.Width_Bar.Scroll += new System.EventHandler(this.Width_Bar_Click);
+            this.button5.Location = new System.Drawing.Point(15, 177);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 0;
+            this.button5.Text = "Pie";
+            this.button5.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.PieClick);
             // 
             // Line
             // 
@@ -129,16 +121,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.SquareClick);
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(15, 119);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "broken line";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.BrokenClick);
-            // 
             // BrokenLine
             // 
             this.BrokenLine.Location = new System.Drawing.Point(15, 75);
@@ -158,37 +140,6 @@
             this.Pen.Text = "pen";
             this.Pen.UseVisualStyleBackColor = true;
             this.Pen.Click += new System.EventHandler(this.PenClick);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.ChangeColor);
-            this.panel2.Controls.Add(this.listView1);
-            this.panel2.Location = new System.Drawing.Point(12, 266);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(258, 216);
-            this.panel2.TabIndex = 2;
-            // 
-            // ChangeColor
-            // 
-            this.ChangeColor.Cursor = System.Windows.Forms.Cursors.WaitCursor;
-            this.ChangeColor.Location = new System.Drawing.Point(25, 28);
-            this.ChangeColor.Name = "ChangeColor";
-            this.ChangeColor.Size = new System.Drawing.Size(75, 23);
-            this.ChangeColor.TabIndex = 1;
-            this.ChangeColor.Text = "Color";
-            this.ChangeColor.UseCompatibleTextRendering = true;
-            this.ChangeColor.UseVisualStyleBackColor = true;
-            this.ChangeColor.UseWaitCursor = true;
-            this.ChangeColor.Click += new System.EventHandler(this.ChangeColor_Click);
-            // 
-            // listView1
-            // 
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(3, 3);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(252, 210);
-            this.listView1.TabIndex = 2;
-            this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // canvas
             // 
@@ -212,43 +163,110 @@
             this.ColorDialog1.SolidColorOnly = true;
             this.ColorDialog1.HelpRequest += new System.EventHandler(this.Form1_Load);
             // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripDropDownButton1});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(1154, 25);
+            this.toolStrip1.TabIndex = 5;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripDropDownButton1
+            // 
+            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.toolStripMenuItem2});
+            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
+            this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Text = "toolStripMenuItem1";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Text = "toolStripMenuItem2";
+            // 
+            // DropDownMenu
+            // 
+            this.DropDownMenu.Location = new System.Drawing.Point(0, 0);
+            this.DropDownMenu.Name = "DropDownMenu";
+            this.DropDownMenu.Size = new System.Drawing.Size(75, 23);
+            this.DropDownMenu.TabIndex = 0;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.Location = new System.Drawing.Point(0, 0);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(104, 24);
+            this.checkBox2.TabIndex = 0;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Location = new System.Drawing.Point(0, 0);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(104, 24);
+            this.checkBox1.TabIndex = 0;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(0, 0);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 0;
+            // 
             // WindowsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1154, 582);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.canvas);
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "WindowsForm";
             this.Text = "WindowsForm";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Width_Bar)).EndInit();
-            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.PictureBox canvas;
         private System.Windows.Forms.Button Line;
         private System.Windows.Forms.Button BrokenLine;
         private System.Windows.Forms.Button Pen;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Label Number;
-        public System.Windows.Forms.TrackBar Width_Bar;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        public System.Windows.Forms.Button ChangeColor;
         public System.Windows.Forms.ColorDialog ColorDialog1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.Button DropDownMenu;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.CheckBox checkBox2;
         //private System.Windows.Forms.mous
     }
 }

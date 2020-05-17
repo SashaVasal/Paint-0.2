@@ -5,23 +5,18 @@ using System.Windows.Forms;
 
 namespace Graph
 {
-    enum States
-    {
-        MouseUp = 0,
-        MouseDown = 1
-    }
-
-
+    
     public partial class WindowsForm : Form
     {
-        History history = new History();
+        readonly History history = new History();
         readonly Parametr tool;
         readonly ToolPicker picker = new ToolPicker();
         PaintEventArgs e;
-
+        readonly Buttons buttons = new Buttons();
+        
         public WindowsForm()
         {
-
+           
             InitializeComponent();
             tool = new Parametr()
             {            
@@ -30,7 +25,9 @@ namespace Graph
             };
             tool.viewSize.Height = canvas.Height;
             tool.viewSize.Width = canvas.Width;
-            
+            buttons.ColorDialog1 = ColorDialog1;
+            buttons.tool = tool;
+            buttons.panel1 = panel1;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -96,41 +93,82 @@ namespace Graph
         // Button
         public void PenClick(object sender, EventArgs e)
         {
+            
+          
+
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Remove(f);
+            }
             picker.PickPen(ref tool.drawable);
+            buttons.PenClick();
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Add(f);
+            }
+            
         }
         private void SquareClick(object sender, EventArgs e)
         {
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Remove(f);
+            }
             picker.PickSquare(ref tool.drawable);
+            buttons.SquareClick();
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Add(f);              
+            }
+
         }
         private void EllipseClick(object sender, EventArgs e)
         {
+            
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Remove(f);
+            }
             picker.PickEllipse(ref tool.drawable);
+            buttons.EllipseClick();
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Add(f);
+            }
         }
         private void LineClick(object sender, EventArgs e)
         {
+            
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Remove(f);
+            }
             picker.PickLine(ref tool.drawable);
+            buttons.LineClick();
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Add(f);
+            }
+        }
+        private void PieClick(object sender, EventArgs e)
+        {
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Remove(f);
+            }
+            picker.PickPie(ref tool.drawable);
+            buttons.PieClick();
+            foreach (Control f in buttons.buttons)
+            {
+                Controls.Add(f);
+            }
         }
         public void BrokenClick(object sender, EventArgs e)
         {
             //picker.PickPolyline(tool.drawable);
         }
 
-
-
-        private void ChangeColor_Click(object sender, EventArgs e)
-        {
-
-            if (ColorDialog1.ShowDialog() == DialogResult.Cancel)
-                return;
-            tool.color = ColorDialog1.Color;
-
-        }
-        private void Width_Bar_Click(object sender, EventArgs e)
-        {
-            tool.width = Width_Bar.Value;
-            Number.Text = Convert.ToString(Width_Bar.Value);
-
-        }
+        
 
         private void Zoom_Click(object sender, EventArgs e)
         {
@@ -140,6 +178,8 @@ namespace Graph
         {
             picker.PickHand(ref tool.drawable);
         }
+
+        
     }
 }
 

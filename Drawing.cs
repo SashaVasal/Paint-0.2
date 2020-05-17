@@ -43,7 +43,14 @@ namespace Graph
         public Point MovePoint = new Point();
         public Point OldMovePoint = new Point();
         public Point ZoomPoint = new Point();
-    
+        public int startAngle = 0;
+        public int sweepAngle = 0;
+        public bool brush = false;
+        public bool dashPattern = false;
+        public bool hatchBrush = false;
+        public Color hatchColor = Color.Green;
+        public int TypeHatch = 0;
+
     }
     
 
