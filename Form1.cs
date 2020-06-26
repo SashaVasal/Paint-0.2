@@ -1,185 +1,240 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-
+using Newtonsoft.Json;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace Graph
 {
     
     public partial class WindowsForm : Form
     {
-        readonly History history = new History();
-        readonly Parametr tool;
-        readonly ToolPicker picker = new ToolPicker();
-        PaintEventArgs e;
-        readonly Buttons buttons = new Buttons();
+        public delegate void Handler();
         
+        Parametr tool;
+        ToolPicker picker = new ToolPicker();
+        double tick = 0;
+
+        readonly Buttons buttons = new Buttons();
         public WindowsForm()
         {
            
             InitializeComponent();
             tool = new Parametr()
-            {            
-                bit = new Bitmap(3000, 3000),
-                drawable = new Draw_Ellipse()
+            {
+               
             };
-            tool.viewSize.Height = canvas.Height;
-            tool.viewSize.Width = canvas.Width;
-            buttons.ColorDialog1 = ColorDialog1;
+            picker.parametr = tool;
+            tool.viewSize.Height = 1000;
+            tool.viewSize.Width = 1000;
+            buttons.LineColorDialog = LineColorDialog;
+            buttons.FillColorDialog = FillColorDialog;
             buttons.tool = tool;
-            buttons.panel1 = panel1;
-        }
+            canvas.Image = new Bitmap(2000, 2000);
+            tool.canvas = canvas;
+            tool.history = new History();
+            tool.drawable = new Draw_Line(tool.penPicker, tool.history);
+            var handlers = new List<Handler>
+            {
+                () =>
+                {
+                        picker.PickEllipse(ref tool.drawable);
+                        buttons.EllipseClick();
+                },
+                () =>
+                {
+                       picker.PickSquare(ref tool.drawable);
+                       buttons.SquareClick();
+                },
+                () =>
+                {
+                       picker.PickPen(ref tool.drawable);
+                       buttons.PenClick();
+                },
+                () =>
+                {
+                    picker.PickPie(ref tool.drawable);
+                    buttons.PieClick();
+                },
+                 () =>
+                {
+                    picker.PickLine(ref tool.drawable);
+                    buttons.LineClick();
+                },
+                 () =>
+                {
+                    picker.PickZoom(ref tool.drawable);
+                    buttons.ZoomClick();
+                },
+                 () =>
+                {
+                    picker.PickHand(ref tool.drawable);
+                    buttons.HandClick();
+                },
+            };
+            List<Button> ControlsButtons = new List<Button> {
+              new Button { Name = "Ellipse",Text = "Ellipse", BackColor = Color.White, TabIndex = 0, Height = 40, Width=100},
+              new Button { Name = "Square",Text = "Square", BackColor = Color.White, TabIndex = 1, Height = 40, Width=100},
+              new Button { Name = "Pen",Text = "Pen", BackColor = Color.White, TabIndex = 2, Height = 40, Width=100},
+              new Button { Name = "Pie",Text = "Pie", BackColor = Color.White, TabIndex = 3, Height = 40, Width=100},
+              new Button { Name = "Line",Text = "Line", BackColor = Color.White, TabIndex = 4, Height = 40, Width=100},
+              new Button { Name = "Zoom",Text = "Zoom", BackColor = Color.White, TabIndex = 5, Height = 40, Width=100},
+              new Button { Name = "Hand",Text = "Hand", BackColor = Color.White, TabIndex = 6, Height = 40, Width=100},
+            };
+            int X = 0;
+           
+            foreach (var b in ControlsButtons)
+            {              
+                b.Location = new Point(25, X+=50);
+                b.Click += (sender, EventArgs) => {
+                    foreach (Control f in buttons.buttons)
+                    {
+                        Controls.Remove(f);
+                    }
 
+                    handlers[b.TabIndex]();
+
+                    foreach (Control f in buttons.buttons)
+                    {
+                        Controls.Add(f);
+                    }
+                };               
+                Controls.Add(b);
+            };
+        
+        }
+       
         private void Form1_Load(object sender, EventArgs e)
         {
-
+          
         }
         
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
 
-            if (tool.IsMouseDown == true)
-            {
-                tool.drawable.ClickMove(this.e, tool, history);               
+           
+            if (tool.stateMouse == StateMouse.MouseLeft || tool.stateMouse == StateMouse.MouseRight)
+            {             
+                tool.drawable.SetOldPoint(tool.MovePoint);               
+                tool.drawable.SetMovePoint(e.Location);
                 tool.MovePoint = e.Location;
-                Refresh();
-            }
+                foreach(Shape s in tool.history.h)
+                {
+                    s.Draw(false, Graphics.FromImage(canvas.Image));
+                }
+            }                           
+           Refresh();
+
         }
 
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
-        {         
+        {
+            
             tool.StartPoint = e.Location;
             tool.MovePoint = e.Location;
-            tool.OldMovePoint = tool.MovePoint;
-            if(e.Button == MouseButtons.Left)
+            tool.drawable.SetOldPoint(tool.MovePoint);
+            tool.drawable.SetStartPoint(tool.StartPoint);
+            tool.drawable.SetMovePoint(e.Location);
+            if (e.Button == MouseButtons.Left)
             {
-                tool.drawable.ClickDownLeft(this.e, tool, history);
+                tool.stateMouse = StateMouse.MouseLeft;
+                tool.drawable.SetMouseState(StateMouse.MouseLeft);
             }
-            else
+            if (e.Button == MouseButtons.Right)
             {
-                tool.drawable.ClickDownRight(this.e, tool, history);
-            }                     
-            tool.IsMouseDown = true;                                  
+                tool.stateMouse = StateMouse.MouseRight;
+                tool.drawable.SetMouseState(StateMouse.MouseRight);
+            }
 
+            
+           
         }
         private void Canvas_MouseUp(object sender, MouseEventArgs e)
         {
-
-            if (tool.IsMouseDown == true)
+            if (tool.stateMouse == StateMouse.MouseLeft)
             {
-                tool.OldMovePoint = tool.MovePoint;
-                tool.MovePoint = e.Location;
-                if (e.Button == MouseButtons.Left)
-                {
-                    tool.drawable.ClickUp(this.e, tool, history);
-                }
                 
-                tool.IsMouseDown = false;
-                canvas.Image = tool.bit;                                
+                tool.MovePoint = e.Location;
+                tool.stateMouse = StateMouse.MouseLeftUp;
+                tool.drawable.SetMouseState(StateMouse.MouseLeftUp);
             }
+
+            if (tool.stateMouse == StateMouse.MouseRight)
+            {              
+                tool.MovePoint = e.Location;
+                tool.stateMouse = StateMouse.MouseRightUp;
+                tool.drawable.SetMouseState(StateMouse.MouseRightUp);
+            }          
+            tool.drawable.Draw(true, Graphics.FromImage(canvas.Image));
+            tool.drawable.SetMouseState(StateMouse.MouseIdle);
+            tool.drawable.penPicker.animate = tool.penPicker.animate;
+            
         }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
-            
-            tool.drawable.Draw(e, tool, history);                    
-            foreach (Parametr f in history.history)
-            {
-                f.drawable.Draw(e, f, history);
-            }
-            this.e = e;
+           tool.drawable.Draw(true,e.Graphics);
+                        
         }
 
-        // Button
-        public void PenClick(object sender, EventArgs e)
+        private void Save_click(object sender, EventArgs e)
         {
+           
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "PaintCLone files (*.json) | *.json";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
             
+                var jsonFormatter = new DataContractJsonSerializer(typeof(List<Shape>));
+
+                using (var file = new FileStream(@"image.json", FileMode.Create))
+                {
+                    jsonFormatter.WriteObject(file, tool.history.h);
+                }
+            
+            
+        }
+
+        private void Load_button_Click(object sender, EventArgs e)
+        {
+            var jsonFormatter = new DataContractJsonSerializer(typeof(List<Shape>));
+            List<Shape> q = new List<Shape>();
+            using (var file = new FileStream(@"image.json", FileMode.OpenOrCreate))
+            {
+                try
+                {
+                    q = jsonFormatter.ReadObject(file) as List<Shape>;
+                    tool.history.h.AddRange(q);
+                    foreach (Shape h in tool.history.h)
+                    {
+                        h.Draw(false, Graphics.FromImage(canvas.Image));
+                    }
+                    Update();
+                }
+                catch
+                {
+                    MessageBox.Show("Ошибка чтения файла! Возможно, файл поврежден.");
+                }
+            }
+
+
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
           
-
-            foreach (Control f in buttons.buttons)
+            Graphics.FromImage(canvas.Image).Clear(Color.White);
+            foreach (Shape s in tool.history.h)
             {
-                Controls.Remove(f);
+                s.Animate();                                            
+                s.Draw(false, Graphics.FromImage(canvas.Image));
+               
             }
-            picker.PickPen(ref tool.drawable);
-            buttons.PenClick();
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Add(f);
-            }
-            
-        }
-        private void SquareClick(object sender, EventArgs e)
-        {
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Remove(f);
-            }
-            picker.PickSquare(ref tool.drawable);
-            buttons.SquareClick();
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Add(f);              
-            }
+            Refresh();
 
         }
-        private void EllipseClick(object sender, EventArgs e)
-        {
-            
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Remove(f);
-            }
-            picker.PickEllipse(ref tool.drawable);
-            buttons.EllipseClick();
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Add(f);
-            }
-        }
-        private void LineClick(object sender, EventArgs e)
-        {
-            
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Remove(f);
-            }
-            picker.PickLine(ref tool.drawable);
-            buttons.LineClick();
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Add(f);
-            }
-        }
-        private void PieClick(object sender, EventArgs e)
-        {
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Remove(f);
-            }
-            picker.PickPie(ref tool.drawable);
-            buttons.PieClick();
-            foreach (Control f in buttons.buttons)
-            {
-                Controls.Add(f);
-            }
-        }
-        public void BrokenClick(object sender, EventArgs e)
-        {
-            //picker.PickPolyline(tool.drawable);
-        }
-
-        
-
-        private void Zoom_Click(object sender, EventArgs e)
-        {
-            picker.PickZoom(ref tool.drawable);
-        }
-        private void Hand_Click(object sender, EventArgs e)
-        {
-            picker.PickHand(ref tool.drawable);
-        }
-
-        
     }
 }
 

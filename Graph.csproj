@@ -48,11 +48,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Drawing.Common.4.7.0\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -65,10 +70,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buttons.cs" />
-    <Compile Include="Color_Line\Location.cs" />
     <Compile Include="Draw_Pie.cs" />
     <Compile Include="Hand.cs" />
     <Compile Include="History.cs" />
+    <Compile Include="PickButtons.cs" />
+    <Compile Include="Shape.cs" />
     <Compile Include="Zoom.cs" />
     <Compile Include="Draw_Pen.cs" />
     <Compile Include="Drawing.cs" />

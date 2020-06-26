@@ -1,43 +1,36 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 
 
 namespace Graph
 {
-    public class Draw_Pen : IDrawable
+    [DataContract]
+    public class Draw_Pen : Shape
     {
-        
-        public string GetName()
+
+        public Draw_Pen(PenPicker penPicker, History history) : base(penPicker, history)
         {
-            return "Pen";
+            NameFigure = "Pen";
         }
-        public void Draw(PaintEventArgs e, Parametr tool, History history)
+        public override void Draw(bool SaveElem, Graphics canvas)
         {
-            Pen pen = new Pen(tool.color, tool.width);
-            if (tool.dashPattern == true)
+ 
+            if (stateMouse == StateMouse.MouseLeft || stateMouse == StateMouse.MouseLeftUp || stateMouse == StateMouse.MouseIdle)
             {
-                pen.DashCap = System.Drawing.Drawing2D.DashCap.Round;
-                pen.DashPattern = new float[] { 4.0F, 2.0F, 1.0F, 3.0F };
+                canvas.DrawLine(penPicker.GetPen(), OldMovePoint.X, OldMovePoint.Y, MovePoint.X, MovePoint.Y);
+              
             }
-            e.Graphics.DrawLine(pen, tool.OldMovePoint.X, tool.OldMovePoint.Y, tool.MovePoint.X, tool.MovePoint.Y);
+            
+            if (SaveElem)
+            {
+                history.AddElement(new Draw_Pen(penPicker, history),StartPoint,MovePoint,OldMovePoint, penPicker);
+            }
+             
         }
-        public void ClickDownRight(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
-        public void ClickDownLeft(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
-        public void ClickUp(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
-        public void ClickMove(PaintEventArgs e, Parametr tool, History history)
-        {
-            history.AddElement(tool);
-            tool.OldMovePoint = tool.MovePoint;                   
-        }
+       
+        
     }
 }

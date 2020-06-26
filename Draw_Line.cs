@@ -1,48 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 
 namespace Graph
 {
-    public class Draw_Line : IDrawable
+    [DataContract]
+    public class Draw_Line : Shape
     {
 
-        public string GetName()
+        public Draw_Line(PenPicker penPicker,  History history) : base(penPicker, history)
         {
-            return "Figure";
+            NameFigure = "Line";
         }
-        public void Draw(PaintEventArgs e, Parametr tool, History history)
+        public override void Draw(bool SaveElem, Graphics canvas)
         {
-            Pen pen = new Pen(tool.color, tool.width);
-            if (tool.dashPattern == true)
+            if(!SaveElem)
             {
-                pen.DashCap = System.Drawing.Drawing2D.DashCap.Round;
-                pen.DashPattern = new float[] { 4.0F, 2.0F, 1.0F, 3.0F };
+                canvas.DrawLine(penPicker.GetPen(), StartPoint.X, StartPoint.Y, MovePoint.X, MovePoint.Y);
             }
+            if(stateMouse == StateMouse.MouseLeft)
+            {
+                canvas.DrawLine(penPicker.GetPen(), StartPoint.X, StartPoint.Y, MovePoint.X, MovePoint.Y);
+                
+            }
+            if(stateMouse == StateMouse.MouseLeftUp)
+            {
+                canvas.DrawLine(penPicker.GetPen(), StartPoint.X, StartPoint.Y, MovePoint.X, MovePoint.Y);
+                if (SaveElem)
+                {
+                    history.AddElement(new Draw_Line(penPicker, history ), StartPoint, MovePoint, OldMovePoint, penPicker);
+                }
+           }
+        }
+        
+        
 
 
-            e.Graphics.DrawLine(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X, tool.MovePoint.Y);
-            
-        }
-        public void ClickDownRight(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
-        public void ClickDownLeft(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
-        public void ClickUp(PaintEventArgs e, Parametr tool, History history)
-        {
-            history.AddElement(tool);
-        }
-        public void ClickMove(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
     }
 }

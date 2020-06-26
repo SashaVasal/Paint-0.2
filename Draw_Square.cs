@@ -3,115 +3,64 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Graph
 {
-    class Draw_Square: IDrawable
+    [DataContract]
+    class Draw_Square: Shape
     {
-        public string GetName()
+        
+        public Draw_Square(PenPicker penPicker,History history) : base(penPicker, history)
         {
-            return "Figure";
+            NameFigure = "Rectangle";
         }
-        public void Draw(PaintEventArgs e, Parametr tool, History history)
+        public override void Draw(bool SaveElem, Graphics canvas)
         {
-            if (tool.brush)
+            if (!SaveElem)
             {
-                if (tool.hatchBrush)
+                if (penPicker.penBool == 1)
                 {
-                    HatchBrush pen = new HatchBrush(HatchStyle.Vertical, Color.Green, tool.color);
-                    List<HatchStyle> hatchStyles = new List<HatchStyle>();
-                    //hatchStyles.Add(HatchStyle.)
-                    if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillRectangle(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
-
-                    }
-                    else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillRectangle(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
-
-                    }
-                    if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillRectangle(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
-                    }
-                    else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillRectangle(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
-                    }
+                    canvas.DrawRectangle(penPicker.GetPen(), Math.Min(StartPoint.X, MovePoint.X), Math.Min(StartPoint.Y, MovePoint.Y), Math.Abs(StartPoint.X - MovePoint.X), Math.Abs(MovePoint.Y - StartPoint.Y));
                 }
-                else
+                if (penPicker.brushBool == 1)
                 {
-                    SolidBrush pen = new SolidBrush(tool.color);
+                    canvas.FillRectangle(penPicker.GetBrush(), Math.Min(StartPoint.X, MovePoint.X), Math.Min(StartPoint.Y, MovePoint.Y), Math.Abs(StartPoint.X - MovePoint.X), Math.Abs(MovePoint.Y - StartPoint.Y));
+                }
+            }
+            if (stateMouse == StateMouse.MouseLeft)
+            {
 
-                    if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillRectangle(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
-
-                    }
-                    else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillRectangle(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
-
-                    }
-                    if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillRectangle(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
-                    }
-                    else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillRectangle(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
-                    }
+                if (penPicker.penBool == 1)
+                {
+                    canvas.DrawRectangle(penPicker.GetPen(), Math.Min(StartPoint.X, MovePoint.X), Math.Min(StartPoint.Y, MovePoint.Y), Math.Abs(StartPoint.X - MovePoint.X), Math.Abs(MovePoint.Y - StartPoint.Y));
+                }
+                if (penPicker.brushBool == 1)
+                {
+                    canvas.FillRectangle(penPicker.GetBrush(), Math.Min(StartPoint.X, MovePoint.X), Math.Min(StartPoint.Y, MovePoint.Y), Math.Abs(StartPoint.X - MovePoint.X), Math.Abs(MovePoint.Y - StartPoint.Y));
+                }
+            }
+            if (stateMouse == StateMouse.MouseLeftUp)
+            {
+                if (penPicker.penBool == 1)
+                {
+                    canvas.DrawRectangle(penPicker.GetPen(), Math.Min(StartPoint.X, MovePoint.X), Math.Min(StartPoint.Y, MovePoint.Y), Math.Abs(StartPoint.X - MovePoint.X), Math.Abs(MovePoint.Y - StartPoint.Y));
+                }
+                if (penPicker.brushBool == 1)
+                {
+                    canvas.FillRectangle(penPicker.GetBrush(), Math.Min(StartPoint.X, MovePoint.X), Math.Min(StartPoint.Y, MovePoint.Y), Math.Abs(StartPoint.X - MovePoint.X), Math.Abs(MovePoint.Y - StartPoint.Y));
+                }
+                if (SaveElem)
+                {
+                    history.AddElement(new Draw_Square(penPicker, history), StartPoint, MovePoint, OldMovePoint, penPicker);
                 }
                 
             }
-            else
-            {         
-                Pen pen = new Pen(tool.color, tool.width);
-                if (tool.dashPattern == true)
-                {
-                    pen.DashCap = System.Drawing.Drawing2D.DashCap.Round;
-                    pen.DashPattern = new float[] { 4.0F, 2.0F, 1.0F, 3.0F };
-                }
-                if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                {
-                    e.Graphics.DrawRectangle(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
-                }
-                else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                {
-                    e.Graphics.DrawRectangle(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
-                }
-                if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                {
-                    e.Graphics.DrawRectangle(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y);
-                }
-                else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                {
-                    e.Graphics.DrawRectangle(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y);
-                }
-            }
-           
-           
         }
-        public void ClickDownRight(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
-        public void ClickDownLeft(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
-        public void ClickUp(PaintEventArgs e, Parametr tool, History history)
-        {
-            history.AddElement(tool);
-        }
-        public void ClickMove(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
+       
 
     }
 }

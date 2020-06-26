@@ -3,112 +3,49 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Graph
 {
-    public class Draw_Pie : IDrawable
+    [DataContract]
+    public class Draw_Pie : Shape
     {
-        public string GetName()
+        [DataMember]
+        int startAngle;
+        [DataMember]
+        int sweepAngle;
+        public Draw_Pie(PenPicker penPicker, int startAngle, int sweepAngle, History history) : base(penPicker, history)
         {
-            return "Figure";
+            this.startAngle = startAngle;
+            this.sweepAngle = sweepAngle;
+            NameFigure = "Pie";
         }
-        public void Draw(PaintEventArgs e, Parametr tool, History history)
+        public override void Draw(bool SaveElem, Graphics canvas)
         {
-            if (tool.brush)
+        
+            
+            if (stateMouse == StateMouse.MouseLeftUp || stateMouse == StateMouse.MouseLeft)
             {
-                if (tool.hatchBrush)
+                if (penPicker.penBool == 1)
                 {
-                    HatchBrush pen = new HatchBrush(HatchStyle.Vertical, Color.Green, tool.color);
-                    List<HatchStyle> hatchStyles = new List<HatchStyle>();
-                    //hatchStyles.Add(HatchStyle.)
-                    if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillPie(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
-                    }
-                    else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillPie(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
-                    }
-                    if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillPie(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
-                    }
-                    else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillPie(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
-                    }
-
+                    canvas.DrawPie(penPicker.GetPen(), Math.Min(StartPoint.X, MovePoint.X), Math.Min(StartPoint.Y, MovePoint.Y), Math.Abs(StartPoint.X - MovePoint.X) + 1, Math.Abs(MovePoint.Y - StartPoint.Y) + 1, startAngle, startAngle + sweepAngle);
                 }
-                else
+                if (penPicker.brushBool == 1)
                 {
-                    SolidBrush pen = new SolidBrush(tool.color);
-
-                    if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillPie(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
-                    }
-                    else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillPie(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
-                    }
-                    if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillPie(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
-                    }
-                    else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                    {
-                        e.Graphics.FillPie(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
-                    }
+                    canvas.FillPie(penPicker.GetBrush(), Math.Min(StartPoint.X, MovePoint.X), Math.Min(StartPoint.Y, MovePoint.Y), Math.Abs(StartPoint.X - MovePoint.X) + 1, Math.Abs(MovePoint.Y - StartPoint.Y) + 1, startAngle, startAngle + sweepAngle);
                 }
-            }
-            else
-            {
-                Pen pen = new Pen(tool.color, tool.width);
-                if (tool.dashPattern == true)
+                if (SaveElem)
                 {
-                    pen.DashCap = System.Drawing.Drawing2D.DashCap.Round;
-                    pen.DashPattern = new float[] { 4.0F, 2.0F, 1.0F, 3.0F };
+                    history.AddElement(new Draw_Pie(penPicker, startAngle, sweepAngle, history), StartPoint, MovePoint, OldMovePoint, penPicker);
                 }
-
-                if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                {
-                    e.Graphics.DrawPie(pen, tool.StartPoint.X, tool.StartPoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
-                }
-                else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                {
-                    e.Graphics.DrawPie(pen, tool.MovePoint.X, tool.MovePoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
-                }
-                if (tool.MovePoint.X > tool.StartPoint.X && tool.MovePoint.Y < tool.StartPoint.Y)
-                {
-                    e.Graphics.DrawPie(pen, tool.StartPoint.X, tool.MovePoint.Y, tool.MovePoint.X - tool.StartPoint.X, tool.StartPoint.Y - tool.MovePoint.Y, tool.startAngle, tool.sweepAngle);
-                }
-                else if (tool.MovePoint.X < tool.StartPoint.X && tool.MovePoint.Y > tool.StartPoint.Y)
-                {
-                    e.Graphics.DrawPie(pen, tool.MovePoint.X, tool.StartPoint.Y, tool.StartPoint.X - tool.MovePoint.X, tool.MovePoint.Y - tool.StartPoint.Y, tool.startAngle, tool.sweepAngle);
-                }
+                
             }
             
-            
         }
-        public void ClickDownRight(PaintEventArgs e, Parametr tool, History history)
-        {
 
-        }
-        public void ClickDownLeft(PaintEventArgs e, Parametr tool, History history)
-        {
-
-        }
-        public void ClickUp(PaintEventArgs e, Parametr tool, History history)
-        {
-           
-            history.AddElement(tool);
-        }
-        public void ClickMove(PaintEventArgs e, Parametr tool, History history)
-        {
-            
-        }
+        
     }
 }

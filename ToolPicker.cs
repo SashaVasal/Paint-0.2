@@ -11,51 +11,42 @@ namespace Graph
 
     public class ToolPicker
     {
-        
- 
-
-        
-        public void PickPen(ref IDrawable figures)
-        {
-           
-            figures = new Draw_Pen();
-            
-            
+        public Parametr parametr;
+       
+        public void PickPen(ref Shape figures)
+        {          
+            figures = new Draw_Pen(parametr.penPicker, parametr.history);                      
         }
-        public void PickSquare(ref IDrawable figures)
-        {
-         
-            figures = new Draw_Square();
-        }
-        public void PickLine(ref IDrawable figures)
-        {
-         
-            figures = new Draw_Line();
-        }
-        public void PickPolyline(List<IDrawable> figures)
-        {
-            figures.Clear();
-            figures.Add(new Draw_Square());
-        }
-        public void PickEllipse(ref IDrawable figures)
-        {       
-        
-            figures = new Draw_Ellipse();
-        }
-        public void PickZoom(ref IDrawable figures)
+        public void PickSquare(ref Shape figures)
         {
 
-            figures = new ZoomTool();
+            figures = new Draw_Square(parametr.penPicker, parametr.history);
         }
-        public void PickHand(ref IDrawable figures)
+        public void PickLine(ref Shape figures)
         {
 
-            figures = new Hand();
+            figures = new Draw_Line(parametr.penPicker, parametr.history);
         }
-        public void PickPie(ref IDrawable figures)
+       
+        public void PickEllipse(ref Shape figures)
         {
 
-            figures = new Draw_Pie();
+            figures = new Draw_Ellipse(parametr.penPicker, parametr.history);
+        }
+        public void PickZoom(ref Shape figures)
+        {
+
+            figures = new ZoomTool(parametr.penPicker, parametr.history);
+        }
+        public void PickHand(ref Shape figures)
+        {
+
+            figures = new Hand(parametr.penPicker, parametr.history);
+        }
+        public void PickPie(ref Shape figures)
+        {
+
+            figures = new Draw_Pie(parametr.penPicker, parametr.startAngle,parametr.sweepAngle, parametr.history);
         }
     }
 
